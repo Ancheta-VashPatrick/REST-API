@@ -10,3 +10,13 @@ CREATE TABLE `sensor_data`
   UNIQUE `idx_node_sensor_value_unique` (`node_id`,`sensor_type`,`recorded_at`)
 )
 engine = innodb charset=utf8mb4 COLLATE utf8mb4_general_ci;
+
+CREATE TABLE `users`
+(
+  `username`  VARCHAR(255) NOT NULL,
+  `password`  VARCHAR(255) NOT NULL,
+  `role`      ENUM('consumer', 'concessionaire', 'regulator') NOT NULL,
+  `nodes`     VARCHAR(255) NULL,
+  PRIMARY KEY (`username`)
+)
+engine = innodb charset=utf8mb4 COLLATE utf8mb4_general_ci;

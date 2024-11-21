@@ -14,29 +14,40 @@ router.post("/signup", async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, 8);
 
   // Store user
-  users.push({ username, password: hashedPassword });
+  message = await authentication.addUser({
+    username,
+    password: hashedPassword,
+    role: "consumer",
+    nodes: "NULL",
+  });
 
-  res.status(201).send("User created");
+  res.status(201).send({ message });
 });
 
 // Login route
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  const user = users.find((u) => u.username === username);
+
+  const { message, result } = await authentication.checkUser(username);
+  // console.log(message);
+  // console.log(result);
+  const user = result;
 
   if (!user || !(await bcrypt.compare(password, user.password))) {
-    return res.status(401).send("Invalid credentials");
+    return res.status(401).send({ message: "Invalid credentials" });
   }
 
   // Generate token
-  const token = authentication.getToken(user.username);
+  const token = authentication.getToken(user);
 
-  res.status(200).send({ token });
+  res.status(200).send({ message, token });
 });
 
 // Protected route example
 router.get("/dashboard", authentication.authenticateToken, (req, res) => {
-  res.status(200).send("Welcome to the dashboard, " + req.user.userId);
+  res
+    .status(200)
+    .send({ message: "Welcome to the dashboard, " + req.user.username });
 });
 
 module.exports = router;

@@ -14,6 +14,7 @@ router.get("/", async function (req, res, next) {
 
 /* POST sensor data */
 router.post("/", async function (req, res, next) {
+  // console.log(`${JSON.stringify(req.body)}`);
   try {
     res.json(await sensorData.create(req.body));
   } catch (err) {
