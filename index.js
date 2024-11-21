@@ -6,6 +6,8 @@ const fs = require("fs");
 const app = express();
 const port = 3000;
 
+const authenticationRouter = require("./routes/authentication");
+
 const sensorDataRouter = require("./routes/sensor-data");
 
 app.use(express.json());
@@ -19,6 +21,7 @@ app.get("/", (req, res) => {
   res.json({ message: "ok" });
 });
 
+app.use("/", authenticationRouter);
 app.use("/sensor-data", sensorDataRouter);
 
 /* Error handler middleware */
@@ -39,3 +42,7 @@ const server = https.createServer(options, app);
 server.listen(port, () => {
   console.log(`Example app listening at https://localhost:${port}`);
 });
+
+// app.listen(port, () => {
+//   console.log(`Example app listening at http://localhost:${port}`);
+// });
